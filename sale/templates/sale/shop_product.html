@@ -1,0 +1,131 @@
+{% extends "essentials/base.html" %} 
+{% load static %} 
+{% block title %} Shopping {% endblock %} 
+{% block header %} {% include "essentials/heading/header.html" %} {% endblock %} 
+{% block css %}
+<!-- Page JS Plugins CSS -->
+<link rel="stylesheet" href="{% static 'js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css' %}">
+<link rel="stylesheet" href="{% static 'js/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css' %}">
+<link rel="stylesheet" href="{% static 'js/plugins/select2/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'js/plugins/ion-rangeslider/css/ion.rangeSlider.css' %}">
+<link rel="stylesheet" href="{% static 'js/plugins/dropzone/dist/min/dropzone.min.css' %}">
+<link rel="stylesheet" href="{% static 'js/plugins/flatpickr/flatpickr.min.css' %}">
+{% endblock %}
+{% block content %}
+<!-- Main Container -->
+<main id="main-container">
+    <!-- Hero -->
+    <div class="bg-body-light">
+        <div class="content content-full">
+            <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+                <h1 class="flex-sm-fill h3 my-2">
+                    Switch <small class="d-block d-sm-inline-block mt-2 mt-sm-0 font-size-base font-w400 text-muted"></small>
+                </h1>
+                <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-alt">
+                        <li class="breadcrumb-item">
+                            <a class="link-fx" href="">Shopping Cart</a>
+                        </li>
+                        <li class="breadcrumb-item"><i class="nav-main-link-icon fas fa-shopping-cart"></i></li>
+                        <li class="breadcrumb-item" aria-current="page">
+                            {% if products_in_cart %}
+                                <a href="{% url 'detail-cart' %}">
+                                    {{products_in_cart }}
+                                </a>
+                            {% else %}
+                                0
+                            {% endif %}
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END Hero -->
+
+    <!-- Page Content -->
+    <div class="content">
+        <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _es6/pages/be_forms_validation.js) -->
+        <!-- For more examples you can check out https://github.com/jzaefferer/jquery-validation -->
+        <!-- Dynamic Table Full -->
+        <div class="block">
+            <div class="block-header">
+                <h3 class="block-title">Products <small><a href=""></a></small></h3>
+            </div>
+            <div class="block-content block-content-full">
+                <!-- DataTables init on table by adding .js-dataTable-full class, functionality is initialized in js/pages/be_tables_datatables.min.js which was auto compiled from _es6/pages/be_tables_datatables.js -->
+                <table class="table table-bordered table-striped table-vcenter js-dataTable-full">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Product #</th>
+                            <th>Image</th>
+                            <th class="d-none d-sm-table-cell">Price</th>
+                            <th class="d-none d-sm-table-cell">Quantity</th>
+                            <th class="d-none d-sm-table-cell">Category</th>
+                            <th class="d-none d-sm-table-cell">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td class="font-w600 font-size-sm">
+                                {{product.name}}
+                            </td>
+                            <td class="text-center font-size-sm">{{product.productNumber}}</td>
+                            <td class="text-center font-size-sm"><img src="{{product.image.url}}" height="100" alt="product"></td>
+                            <td class="d-none d-sm-table-cell font-size-sm">
+                                <em class="text-muted">{{product.price}}</em>
+                            </td>
+                            <td class="d-none d-sm-table-cell font-size-sm">
+                                    <em class="text-muted">{{product.quantity}}</em>
+                                </td>
+                            <td>
+                                <em class="text-muted font-size-sm">{{product.category}}</em>
+                            </td>
+                            <td>
+                                <a href="{% url 'item-select' product.id %}">select</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END Dynamic Table Full -->
+        
+        <!-- jQuery Validation -->
+    </div>
+    <!-- END Page Content -->
+</main>
+<!-- END Main Container -->
+{% endblock %}
+{% block footer %}
+    {% include "essentials/footer/footer.html" %}
+{% endblock %}
+{%block script %}
+<!-- Page JS Plugins -->
+<script src="{% static 'js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js'%}"></script>
+<script src="{% static 'js/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js'%}"></script>
+<script src="{% static 'js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js'%}"></script>
+<script src="{% static 'js/plugins/select2/js/select2.full.min.js'%}"></script>
+<script src="{% static 'js/plugins/jquery.maskedinput/jquery.maskedinput.min.js'%}"></script>
+<script src="{% static 'js/plugins/ion-rangeslider/js/ion.rangeSlider.min.js'%}"></script>
+<script src="{% static 'js/plugins/dropzone/dropzone.min.js'%}"></script>
+<script src="{% static 'js/plugins/flatpickr/flatpickr.min.js'%}"></script>
+
+<!-- Page JS Helpers (Flatpickr + BS Datepicker + BS Colorpicker + BS Maxlength + Select2 + Masked Inputs + Ion Range Slider plugins) -->
+<script>jQuery(function(){ One.helpers(['flatpickr', 'datepicker', 'colorpicker', 'maxlength', 'select2', 'masked-inputs', 'rangeslider']); });</script>
+
+<!-- Page JS Plugins -->
+<script src="{% static 'js/plugins/datatables/jquery.dataTables.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/dataTables.bootstrap4.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/buttons/dataTables.buttons.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/buttons/buttons.print.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/buttons/buttons.html5.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/buttons/buttons.flash.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/buttons/buttons.colVis.min.js'%}"></script>
+
+<!-- Page JS Code -->
+<script src="{% static 'js/pages/be_tables_datatables.min.js'%}"></script>
+{%endblock%}

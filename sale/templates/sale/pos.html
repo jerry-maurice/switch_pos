@@ -1,0 +1,177 @@
+{% extends "essentials/base.html" %} 
+{% load static %} 
+{% block title %} POS {% endblock %} 
+{% block header %} {% include "essentials/heading/header.html" %} {% endblock %} 
+{% block content %}
+<!-- Main Container -->
+<main id="main-container">
+    <!-- Hero -->
+    <div class="bg-body-light">
+        <div class="content content-full">
+            <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+                <h1 class="flex-sm-fill h3 my-2">
+                    {{company.name}} <small class="d-block d-sm-inline-block mt-2 mt-sm-0 font-size-base font-w400 text-muted">{{company.about}}</small>
+                </h1>
+                <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-alt">
+                        <li class="breadcrumb-item">
+                            <a class="link-fx" href="">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item">Fund</li>
+                        <li class="breadcrumb-item" aria-current="page">
+                            <a class="link-fx">List</a>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END Hero -->
+
+    <!-- Page Content -->
+    <div class="content">
+        <!-- Dynamic Table Full -->
+        <div class="block">
+            <div class="block-header">
+                <h3 class="block-title">Point of Sale <small></small></h3>
+            </div>
+            <div class="block-content block-content-full">
+                <div class="row items-push">
+                    <div class="col-lg-4">
+                        <table class="table table-bordered table-striped table-vcenter js-dataTable-full">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">Name</th>
+                                    <th>Image</th>
+                                    <th>Price</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for r in products %}
+                                <tr>
+                                    <td class="text-center font-size-sm">{{r.name}}</td>
+                                    <td class="text-center font-size-sm"><img src="{{r.image.url}}" width="50"></td>
+                                    <td class="text-center font-size-sm">{{r.price}}</td>
+                                    <td class="text-center font-size-sm">
+                                        <a id="product_id" href="#" onclick="getProduct({{r.id}},'{{r.name}}', {{r.price}}, '{{r.description}}');">Add</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="table-responsive push">
+                            <table id="summary" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" style="width: 60px;"></th>
+                                        <th>Product</th>
+                                        <th class="text-center" style="width: 90px;">Qnt</th>
+                                        <th class="text-right" style="width: 120px;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <h5 id="totalDue"></h5>
+                            </table>
+                            <button type="submit" id="submitCart" class="btn btn-info">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END Dynamic Table Full -->
+    </div>
+    <!-- END Page Content -->
+</main>
+<!-- END Main Container -->
+{% endblock %} {% block footer %} {% include "essentials/footer/footer.html" %}{% endblock %} {% block script %}
+<!-- Page JS Plugins -->
+<script src="{% static 'js/plugins/datatables/jquery.dataTables.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/dataTables.bootstrap4.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/buttons/dataTables.buttons.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/buttons/buttons.print.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/buttons/buttons.html5.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/buttons/buttons.flash.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/buttons/buttons.colVis.min.js'%}"></script>
+
+<!-- Page JS Code -->
+<script src="{% static 'js/pages/be_tables_datatables.min.js'%}"></script>
+<script>
+    let products= [];
+    let tableCount = 0;
+    let count = 1;
+    let total = 0.0;
+    let summary = document.getElementById('summary').getElementsByTagName('tbody')[0];
+    let totalDue = document.getElementById('totalDue');
+    function getProduct(id, name, price, description){
+        let newRow = summary.insertRow(tableCount).innerHTML = 
+        `
+        <td class="text-center">${count}</td>
+        <td>
+            <p class="font-w600 mb-1">${name}</p>
+            <div class="text-muted">${description}</div>
+        </td>
+        <td class="text-center">
+            <span class="badge badge-pill badge-primary">1</span>
+        </td>
+        <td class="text-right">${price}</td>
+        `;
+        let product = {
+            'id':id,
+            'name':name,
+            'description':description,
+            'price':price
+        }
+        total = ((total * 100) + (price * 100))/100;
+        totalDue.textContent = "TOTAL: " +total;
+        products.push(product);
+        console.log(products);
+        count++;
+        tableCount++;
+    }
+    async function postOrder(url='', data ={}){
+        const response = await fetch(url, {
+            method:'POST',
+            mode:'cors',
+            cache:'no-cache',
+            credentials:'same-origin',
+            headers:{
+			    'X-CSRFToken':getCookie("csrftoken"),
+                'Content-Type':'application/json'
+            }, 
+            redirect:'follow',
+            body:JSON.stringify(data)
+        });
+        return response.json();
+    }
+    document.getElementById('submitCart').addEventListener('click',function(){
+        if (products.length != 0){
+            postOrder("{% url 'order-submission' %}",products)
+            .then(data =>{
+                console.log(data);
+            });}
+        else{
+            alert("Please add item to cart before you submit");
+        }
+    });
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,149 @@
+{% extends "essentials/base.html" %} 
+{% load static %} 
+{% block title %} Add New Product {% endblock %} 
+{% block header %} {% include "essentials/heading/header.html" %} {% endblock %} 
+{% block css %}
+<!-- Page JS Plugins CSS -->
+<link rel="stylesheet" href="{% static 'js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css' %}">
+<link rel="stylesheet" href="{% static 'js/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css' %}">
+<link rel="stylesheet" href="{% static 'js/plugins/select2/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'js/plugins/ion-rangeslider/css/ion.rangeSlider.css' %}">
+<link rel="stylesheet" href="{% static 'js/plugins/dropzone/dist/min/dropzone.min.css' %}">
+<link rel="stylesheet" href="{% static 'js/plugins/flatpickr/flatpickr.min.css' %}">
+{% endblock %}
+{% block content %}
+<!-- Main Container -->
+<main id="main-container">
+    <!-- Hero -->
+    <div class="bg-body-light">
+        <div class="content content-full">
+            <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+                <h1 class="flex-sm-fill h3 my-2">
+                    Switch <small class="d-block d-sm-inline-block mt-2 mt-sm-0 font-size-base font-w400 text-muted"></small>
+                </h1>
+                <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-alt">
+                        <li class="breadcrumb-item">
+                            <a class="link-fx" href="{% url 'account-dashboard' %}">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item">Product</li>
+                        <li class="breadcrumb-item" aria-current="page">
+                            add 
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END Hero -->
+
+    <!-- Page Content -->
+    <div class="content">
+        <!-- jQuery Validation (.js-validation class is initialized in js/pages/be_forms_validation.min.js which was auto compiled from _es6/pages/be_forms_validation.js) -->
+        <!-- For more examples you can check out https://github.com/jzaefferer/jquery-validation -->
+        <form class="js-validation" action="{% url 'add-inventory' %}" enctype="multipart/form-data" method="POST">
+            {% csrf_token %}
+            <div class="block">
+                <div class="block-header">
+                    <h3 class="block-title">New Product</h3>
+                </div>
+                <div class="block-content block-content-full">
+                    <!-- Regular -->
+                    <h2 class="content-heading border-bottom mb-4 pb-2">Type of product</h2>
+                    <div class="row items-push">
+                        <div class="col-lg-4">
+                            <p class="font-size-sm text-muted">
+                                Category
+                            </p>
+                        </div>
+                        <div class="col-lg-8 col-xl-5">
+                            <div class="form-group">
+                                <label for="">Select Product Category <span class="text-danger">*</span></label>
+                                <select required class="form-control" name="category">
+                                    {% for category in categories %}
+                                    <option value="{{category.id}}">{{category.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END Regular -->
+                    <!-- Regular -->
+                    <h2 class="content-heading border-bottom mb-4 pb-2">Product Info</h2>
+                    <div class="row items-push">
+                        <div class="col-lg-4">
+                            <p class="font-size-sm text-muted">
+                                Detail information about product
+                            </p>
+                        </div>
+                        <div class="col-lg-8 col-xl-5">
+                            <div class="form-group">
+                                <label for="">Universal Product Number<span class="text-danger"></span></label>
+                                <input required type="text" class="form-control" name="product_number" placeholder="Enter product number">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Name <span class="text-danger">*</span></label>
+                                <input required type="text" class="form-control" name="name" placeholder="Enter the name of the product">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Picture <span class="text-danger"></span></label>
+                                <input required type="file" class="form-control" id="product_image" name="product_image" placeholder="Upload a picture of the product">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Price <span class="text-danger">*</span></label>
+                                <input required type="number" step="0.01" class="form-control" name="price" placeholder="Enter a valid price..">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Quantity <span class="text-danger">*</span></label>
+                                <input required type="number" class="form-control" name="quantity" placeholder="Enter the number of availabe product..">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Description <span class="text-danger">*</span></label>
+                                <textarea required class="form-control" name="description"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Location <span class="text-danger">*</span></label>
+                                <select required class="form-control" id="location" name="location">
+                                    {% for location in locations %}
+                                    <option value="{{location.id}}">{{location.address}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END Regular -->
+
+                    <!-- Submit -->
+                    <div class="row items-push">
+                        <div class="col-lg-7 offset-lg-4">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                    <!-- END Submit -->
+                    <h4 class="text-center">{{message}}</h4>
+                </div>
+            </div>
+        </form>
+        <!-- jQuery Validation -->
+    </div>
+    <!-- END Page Content -->
+</main>
+<!-- END Main Container -->
+{% endblock %}
+{% block footer %}
+    {% include "essentials/footer/footer.html" %}
+{% endblock %}
+{%block script %}
+<!-- Page JS Plugins -->
+<script src="{% static 'js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js'%}"></script>
+<script src="{% static 'js/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js'%}"></script>
+<script src="{% static 'js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js'%}"></script>
+<script src="{% static 'js/plugins/select2/js/select2.full.min.js'%}"></script>
+<script src="{% static 'js/plugins/jquery.maskedinput/jquery.maskedinput.min.js'%}"></script>
+<script src="{% static 'js/plugins/ion-rangeslider/js/ion.rangeSlider.min.js'%}"></script>
+<script src="{% static 'js/plugins/dropzone/dropzone.min.js'%}"></script>
+<script src="{% static 'js/plugins/flatpickr/flatpickr.min.js'%}"></script>
+
+<!-- Page JS Helpers (Flatpickr + BS Datepicker + BS Colorpicker + BS Maxlength + Select2 + Masked Inputs + Ion Range Slider plugins) -->
+<script>jQuery(function(){ One.helpers(['flatpickr', 'datepicker', 'colorpicker', 'maxlength', 'select2', 'masked-inputs', 'rangeslider']); });</script>
+{%endblock%}

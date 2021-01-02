@@ -1,0 +1,149 @@
+{% extends "essentials/base.html" %} 
+{% load static %} 
+{% block title %} Registers {% endblock %} 
+{% block css %}
+<!-- Page JS Plugins CSS --
+<link rel="stylesheet" href="{% static 'js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css' %}">
+<link rel="stylesheet" href="{% static 'js/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css' %}">
+<link rel="stylesheet" href="{% static 'js/plugins/select2/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'js/plugins/ion-rangeslider/css/ion.rangeSlider.css' %}">
+<link rel="stylesheet" href="{% static 'js/plugins/dropzone/dist/min/dropzone.min.css' %}">
+<link rel="stylesheet" href="{% static 'js/plugins/flatpickr/flatpickr.min.css' %}">-->
+{% endblock %}
+{% block header %} {% include "essentials/heading/header.html" %} {% endblock %} 
+{% block content %}
+<!-- Main Container -->
+<main id="main-container">
+    <!-- Hero -->
+    <div class="bg-body-light">
+        <div class="content content-full">
+            <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+                <h1 class="flex-sm-fill h3 my-2">
+                    {{company.name}} <small class="d-block d-sm-inline-block mt-2 mt-sm-0 font-size-base font-w400 text-muted">{{company.about}}</small>
+                </h1>
+                <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-alt">
+                        <li class="breadcrumb-item">
+                            <a class="link-fx" href="{% url 'account-dashboard'%}">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item">Register</li>
+                        <li class="breadcrumb-item" aria-current="page">
+                            <a class="link-fx">assign</a>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- END Hero -->
+
+    <!-- Page Content -->
+    <div class="content">
+        <!-- Dynamic Table Full -->
+        <div class="block">
+            <div class="block-header">
+                <h3 class="block-title">Register Assigned to Employee<small></small></h3>
+            </div>
+            <div class="block-content block-content-full">
+                <!-- DataTables init on table by adding .js-dataTable-full class, functionality is initialized in js/pages/be_tables_datatables.min.js which was auto compiled from _es6/pages/be_tables_datatables.js -->
+                <table class="table table-bordered table-striped table-vcenter js-dataTable-full">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Employee</th>
+                            <th>Register</th>
+                            <th>Location</th>
+                            <th>Date Assigned</th>
+                            <th>Time Assigned</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in assign %}
+                        <tr>
+                            <td class="text-center font-size-sm">{{r.employee.user.first_name}} {{r.employee.user.last_name}}</td>
+                            <td class="text-center font-size-sm">{{r.register.identification}}</td>
+                            <td class="text-center font-size-sm">{{r.register.location.address}}</td>
+                            <td class="text-center font-size-sm">{{r.access_from}} - {{r.access_to}}</td>
+                            <td class="text-center font-size-sm">{{r.time_start}} - {{r.time_stop}}</td>
+                            <td class="text-center font-size-sm"><a href="{% url 'assign-remove' r.id %}">Remove</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END Dynamic Table Full -->
+        <div class="block">
+            <div class="block-header">
+                <h3 class="block-title">Add new Cash Register today - {{today}} <small></small></h3>
+            </div>
+            <div class="block-content block-content-full">
+                <!-- Search Form -->
+                <form id="" action="{% url 'assign-register' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group row justify-content-center">
+                        <div class="col-sm-6 col-xl-4">
+                            <div class="form-group">
+                                <label for="val-skill">Employee <span class="text-danger"></span></label>
+                                <select class="form-control" id="" name="employee">
+                                    <option value="">Please select Employee</option>
+                                    {% for e in employees %}
+                                    <option value="{{e.id}}">{{e.user.first_name}} {{e.user.last_name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="val-skill">Register <span class="text-danger"></span></label>
+                                <select class="form-control" id="" name="register">
+                                    <option value="">Please select Register</option>
+                                    {% for e in registers %}
+                                    <option value="{{e.id}}"> {{e.identification}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                <input type="date" class="form-control" name="access_from">
+                            </div>
+                            <div class="form-group">
+                                <label>End Date</label>
+                                <input type="date" class="form-control" name="access_to">
+                            </div>
+                            <div class="form-group">
+                                <label>Start Time</label>
+                                <input type="time" class="form-control" name="time_start">
+                            </div>
+                            <div class="form-group">
+                                <label>End Time</label>
+                                <input type="time" class="form-control" name="time_stop">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-block">Create</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- END Page Content -->
+</main>
+<!-- END Main Container -->
+{% endblock %}
+{% block footer %}
+{% include "essentials/footer/footer.html" %}
+{% endblock %}
+{% block  script %}
+<!-- Page JS Plugins -->
+<script src="{% static 'js/plugins/datatables/jquery.dataTables.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/dataTables.bootstrap4.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/buttons/dataTables.buttons.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/buttons/buttons.print.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/buttons/buttons.html5.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/buttons/buttons.flash.min.js'%}"></script>
+<script src="{% static 'js/plugins/datatables/buttons/buttons.colVis.min.js'%}"></script>
+
+<!-- Page JS Code -->
+<script src="{% static 'js/pages/be_tables_datatables.min.js'%}"></script>
+
+{% endblock %}

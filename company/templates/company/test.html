@@ -1,0 +1,16 @@
+{% extends "essentials/base.html" %} 
+{% load static %} 
+{% block title %} Dashboard {% endblock %} 
+{% block header %} {% include "essentials/heading/header.html" %} {% endblock %} 
+{% block content %}
+<form>
+    {{form.as_p}}
+    <input type="submit">
+</form>
+{% endblock %} 
+{% block footer %} 
+    {% include "essentials/footer/footer.html" %}
+{% endblock %} 
+{% block script %}
+
+{% endblock %}

@@ -1,0 +1,156 @@
+{% extends "essentials/base.html" %} 
+{% load static %} 
+{% block title %} Dashboard {% endblock %} 
+{% block header %} {% include "essentials/heading/header.html" %} {% endblock %} 
+{% block content %}
+<!-- Main Container -->
+<main id="main-container">
+    <!-- Navigation -->
+    <div class="bg-white">
+        <div class="content py-3">
+            <!-- Toggle Main Navigation -->
+            <div class="d-lg-none">
+                <!-- Class Toggle, functionality initialized in Helpers.coreToggleClass() -->
+                <button type="button" class="btn btn-block btn-alt-secondary d-flex justify-content-between align-items-center" data-toggle="class-toggle" data-target="#main-navigation" data-class="d-none">
+                    Menu
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+            <!-- END Toggle Main Navigation -->
+
+            <!-- Main Navigation -->
+            <div id="main-navigation" class="d-none d-lg-block mt-2 mt-lg-0">
+                <ul class="nav-main nav-main-horizontal nav-main-hover">
+                    <li class="nav-main-item">
+                        <a class="nav-main-link active" href="{% url 'admin-dashboard' %}">
+                            <i class="nav-main-link-icon si si-compass"></i>
+                            <span class="nav-main-link-name">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-main-item">
+                        <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                            <i class="nav-main-link-icon si si-users"></i>
+                            <span class="nav-main-link-name">Account</span>
+                        </a>
+                        <ul class="nav-main-submenu">
+                            <li class="nav-main-item">
+                                <a class="nav-main-link" href="{% url 'add-account' %}">
+                                    <span class="nav-main-link-name">Add New Account</span>
+                                </a>
+                            </li>
+                            <li class="nav-main-item">
+                                <a class="nav-main-link" href="{% url 'view-account' %}">
+                                    <span class="nav-main-link-name">View All Accounts</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-main-item">
+                        <a class="nav-main-link active" href="{% url 'view-company' %}">
+                            <i class="nav-main-link-icon si si-home"></i>
+                            <span class="nav-main-link-name">Company</span>
+                        </a>
+                    </li>
+                    <li class="nav-main-item">
+                        <a class="nav-main-link active" href="">
+                            <i class="nav-main-link-icon si si-cash"></i>
+                            <span class="nav-main-link-name">Registers</span>
+                        </a>
+                    </li>
+                    <li class="nav-main-item">
+                        <a class="nav-main-link active" href="">
+                            <i class="nav-main-link-icon si si-cash"></i>
+                            <span class="nav-main-link-name">Fund</span>
+                        </a>
+                    </li>
+                    <li class="nav-main-item">
+                        <a class="nav-main-link active" href="">
+                            <i class="nav-main-link-icon si si-phone"></i>
+                            <span class="nav-main-link-name">Support</span>
+                        </a>
+                    </li>
+                    <li class="nav-main-heading"></li>
+                    <li class="nav-main-heading">Admin</li>
+                    <li class="nav-main-item">
+                        <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="false" href="#">
+                            <i class="nav-main-link-icon si si-puzzle"></i>
+                            <span class="nav-main-link-name">Administrative Functions</span>
+                        </a>
+                        <ul class="nav-main-submenu">
+                            <li class="nav-main-item">
+                                <a class="nav-main-link" href="">
+                                    <span class="nav-main-link-name">Rates</span>
+                                </a>
+                            </li>
+                            <li class="nav-main-item">
+                                <a class="nav-main-link" href="">
+                                    <span class="nav-main-link-name">Fees</span>
+                                </a>
+                            </li>
+                            <li class="nav-main-item">
+                                <a class="nav-main-link" href="">
+                                    <span class="nav-main-link-name">Assigned Registers</span>
+                                </a>
+                            </li>
+                            <li class="nav-main-item">
+                                <a class="nav-main-link" href="">
+                                    <span class="nav-main-link-name">Sales</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- END Main Navigation -->
+        </div>
+    </div>
+    <!-- END Navigation -->
+    <!-- Page Content -->
+    <div class="content">
+        <!-- Stats -->
+        <div class="row">
+            <div class="col-6 col-md-3 col-lg-6 col-xl-3">
+                <a class="block block-rounded block-link-pop" href="javascript:void(0)">
+                    <div class="block-content block-content-full">
+                        <div class="font-size-sm font-w600 text-uppercase text-muted">Account</div>
+                        <div class="font-size-h2 font-w400 text-dark">{{accounts | length}}</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-md-3 col-lg-6 col-xl-3">
+                <a class="block block-rounded block-link-pop" href="javascript:void(0)">
+                    <div class="block-content block-content-full">
+                        <div class="font-size-sm font-w600 text-uppercase text-muted">Company</div>
+                        <div class="font-size-h2 font-w400 text-dark">{{companies | length}}</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-md-3 col-lg-6 col-xl-3">
+                <a class="block block-rounded block-link-pop" href="javascript:void(0)">
+                    <div class="block-content block-content-full">
+                        <div class="font-size-sm font-w600 text-uppercase text-muted">User</div>
+                        <div class="font-size-h2 font-w400 text-dark">{{current_users | length}}</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-md-3 col-lg-6 col-xl-3">
+                <a class="block block-rounded block-link-pop" href="javascript:void(0)">
+                    <div class="block-content block-content-full">
+                        <div class="font-size-sm font-w600 text-uppercase text-muted">Transaction</div>
+                        <div class="font-size-h2 font-w400 text-dark"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <!-- END Stats -->  
+    </div>
+    <!-- END Page Content -->
+</main>
+<!-- END Main Container -->
+{% endblock %} 
+{% block footer %} 
+    {% include "essentials/footer/footer.html" %}
+{% endblock %} 
+{% block script %}
+
+{% endblock %}
